@@ -4,6 +4,26 @@
 
 $(function(){
 
+module('Basic');
+
+test('Extend', function() {
+    var o1 = {
+        some : 'stuff'
+    },
+    o2 = {};
+
+    KT.extend(o2, o1);
+    equal(o2.some, 'stuff', 'Extend function - ok');
+});
+
+test('String format', function() {
+    var s = KT.format('Lorem {1} dolor {0} amet', 'sit', 'ipsum');
+    equal(s, 'Lorem ipsum dolor sit amet', 'String formated - ok');
+
+    var s2 = KT.format('Test');
+    equal(s2, 'Test', '1 arg formating - ok')
+});
+
 module('OOP features');
 
 test('Namespaces', function() {

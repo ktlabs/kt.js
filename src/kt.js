@@ -1,9 +1,6 @@
 /**
- * Collection of  utility function from different sources
+ * Collection of  utility function from different sources.
  */
-
-// for old browsers
-window.undefined = window.undefined;
 
 /**
  * @class KT
@@ -13,7 +10,20 @@ window.undefined = window.undefined;
 window.KT = {};
 
 (function() {
-    _.extend(KT, {
+    /**
+     * Simple copy all properties from source object to target
+     * @param target
+     * @param source
+     */
+    KT.extend = function(target, source){
+        for (var v in source) {
+            if (source.hasOwnProperty(v)) {
+                target[v] = source[v];
+            }
+        }
+    };
+
+    KT.extend(KT, {
         /**
          * Original version by John Resig
          * http://ejohn.org/blog/simple-javascript-inheritance/
@@ -29,22 +39,42 @@ window.KT = {};
         },
 
         /**
-         * Creates namespaces to be used for scoping variables and classes so that they are not global.
-         * Source - Ext core
-         * @param {String} namespace1
-         * @param {String} namespace2
+         * Creates dot separated namespace objects to be used for scoping variables and classes
+         * so that they are not global.
+         * @param {String} namespace
          * @return {Object} the namespace object
          */
-        namespace : function() {
-            var o, d;
-            _.each(arguments, function(v) {
-                d = v.split(".");
-                o = window[d[0]] = window[d[0]] || {};
-                _.each(d.slice(1), function(v2) {
-                    o = o[v2] = o[v2] || {};
-                });
-            });
+        namespace : function(namespace) {
+            var o, parts, i = 0, v;
+
+            parts = namespace.split('.');
+            o = window[parts[0]] = window[parts[0]] || {};
+
+            for (i = 1; i < parts.length; i++ ) {
+                v = parts[i];
+                o = o[v] = o[v] || {};
+            }
+
             return o;
+        },
+
+        /**
+         * String formating with .NET style placehloders
+         * @param text
+         * @param params
+         */
+        format : function(text) {
+            var i = 0, l =  arguments.length - 1;
+
+            if (l <= 0) {
+                return text;
+            }
+
+            for (; i < l; i++){
+                text = text.replace( ('{' + i + '}') , arguments[i+1]);
+            }
+
+            return text;
         }
     });
 

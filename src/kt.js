@@ -23,6 +23,84 @@ window.KT = {};
         }
     };
 
+    /**
+     * Typecheckers. Usage is obvious
+     */
+    KT.is = {
+        fun: function (f) {
+            return typeof f === 'function';
+        }
+
+        , str: function (s) {
+            return typeof s === 'string';
+        }
+
+        , ele: function (el) {
+            return !!(el && el.nodeType && el.nodeType == 1);
+        }
+
+        , arr: function (ar) {
+            return ar instanceof Array;
+        }
+
+        , arrLike: function (ar) {
+            return (ar && ar.length && isFinite(ar.length));
+        }
+
+        , num: function (n) {
+            return typeof n === 'number';
+        }
+
+        , bool: function (b) {
+            return (b === true) || (b === false);
+        }
+
+        , args: function (a) {
+            return !!(a && hasOwn.call(a, 'callee'));
+        }
+
+        , emp: function (o) {
+            var i = 0;
+            return KT.is.arr(o) ? o.length === 0 :
+                KT.is.obj(o) ? (function () {
+                    for (var k in o) {
+                        i++;
+                        break;
+                    }
+                    return (i === 0)
+                }()) :
+                    o === ''
+        }
+
+        , dat: function (d) {
+            return !!(d && d.getTimezoneOffset && d.setUTCFullYear);
+        }
+
+        , reg: function (r) {
+            return !!(r && r.test && r.exec && (r.ignoreCase || r.ignoreCase === false));
+        }
+
+        , nan: function (n) {
+            return n !== n;
+        }
+
+        , nil: function (o) {
+            return o === n;
+        }
+
+        , und: function (o) {
+            return typeof o === 'undefined';
+        }
+
+        , def: function (o) {
+            return typeof o !== 'undefined';
+        }
+
+        , obj: function (o) {
+            return o instanceof Object && !KT.is.fun(o) && !KT.is.arr(o);
+        }
+    };
+
     KT.extend(KT, {
         /**
          * Original version by John Resig
@@ -59,6 +137,13 @@ window.KT = {};
         },
 
         /**
+         *  Returns integer number from 0 to n
+         */
+        random : function(n) {
+            return Math.floor(Math.random()*n);
+        },
+
+        /**
          * String formating with .NET style placehloders
          * @param text
          * @param params
@@ -75,6 +160,32 @@ window.KT = {};
             }
 
             return text;
+        },
+
+        merge: function () {
+            // based on jQuery deep merge
+            var options, name, src, copy, clone
+                , target = arguments[0], i = 1, length = arguments.length;
+
+            for (; i < length; i++) {
+                if ((options = arguments[i]) !== null) {
+                    // Extend the base object
+                    for (name in options) {
+                        src = target[name];
+                        copy = options[name];
+                        if (target === copy) {
+                            continue;
+                        }
+                        if (copy && (KT.is.obj(copy))) {
+                            clone = src && KT.is.obj(src) ? src : {};
+                            target[name] = KT.merge(clone, copy);
+                        } else if (copy !== undefined) {
+                            target[name] = copy;
+                        }
+                    }
+                }
+            }
+            return target;
         }
     });
 

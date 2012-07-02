@@ -16,6 +16,40 @@ test('Extend', function() {
     equal(o2.some, 'stuff', 'Extend function - ok');
 });
 
+test('Type checking', function() {
+    //TODO write other
+    equal(KT.is.fun(function(){}), true, 'Function detected - ok');
+    equal(KT.is.fun('Fuuuu'), false, 'Not function deteted - ok');
+
+});
+
+test('Random', function() {
+    var r1 = KT.random(9999), r2 = KT.random(9999);
+    equal(r1 === r2, false, 'Random - ok');
+});
+
+test('Merge', function() {
+    var o1 = {
+        foo : {
+            bar : 'bla'
+        }
+    },
+        o2 = {
+            foo : {
+                some : 'value'
+            },
+            baz : {
+                doz : 'stuff'
+            }
+        };
+
+    var o3 = KT.merge(o1, o2);
+
+    equal(o3.foo.some, 'value', 'Child object merged');
+    equal(o3.foo.bar, 'bla', 'Destination object keeped');
+
+});
+
 test('String format', function() {
     var s = KT.format('Lorem {1} dolor {0} amet', 'sit', 'ipsum');
     equal(s, 'Lorem ipsum dolor sit amet', 'String formated - ok');

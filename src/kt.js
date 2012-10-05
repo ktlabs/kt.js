@@ -120,9 +120,10 @@ window.KT = {};
          * Creates dot separated namespace objects to be used for scoping variables and classes
          * so that they are not global.
          * @param {String} namespace
+         * @param {Function} callback
          * @return {Object} the namespace object
          */
-        namespace : function(namespace) {
+        namespace : function(namespace, callback) {
             var o, parts, i = 0, v;
 
             parts = namespace.split('.');
@@ -131,6 +132,10 @@ window.KT = {};
             for (i = 1; i < parts.length; i++ ) {
                 v = parts[i];
                 o = o[v] = o[v] || {};
+            }
+
+            if(typeof(callback) == 'function'){
+                callback.apply(o);
             }
 
             return o;
